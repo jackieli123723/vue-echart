@@ -1,31 +1,13 @@
 <template>
   <div class="wrapper">
- 
-    <chart :options="bar"  ref="bar" @chartclick="barclick"></chart>
+    <chart :options="bar"  ref="bar"></chart>
   </div>
 </template>
 <style>
-body {
-  margin: 0;
-  padding: 3em 0 0;
-  font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
-  color: #666;
-  text-align: center;
-}
-a {
-  color: inherit;
-  text-decoration: none;
-}
-h1 {
-  margin-bottom: 2em;
-  font-family: Dosis, "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
-  color: #2c3e50;
-  font-weight: 300;
-}
-body .echarts {
+.echarts {
   width: 61.8%;
   min-width: 480px;
-  height: 300px;
+  height: 500px;
   margin: 0 auto 5em;
 }
 </style>
@@ -34,20 +16,10 @@ body .echarts {
 import ECharts from '../components/ECharts/Echarts.vue'
 import Vue from 'vue'
 Vue.component('chart', ECharts);
-let asyncData = {
-  categories: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"],
-  data: [5, 20, 36, 10, 10, 20]
-}
+
 export default {
   data() {
-    let data = []
-    for (let i = 0; i <= 360; i++) {
-        let t = i / 180 * Math.PI
-        let r = Math.sin(2 * t) * Math.cos(2 * t)
-        data.push([r, i])
-    }
     return {
-
       bar: {
         title: {
           text: '异步数据加载示例'
@@ -75,20 +47,123 @@ export default {
     }
   },
   mounted() {
-    // simulating async data from server
-    this.$refs.bar.showLoading();
-    setTimeout(() => {
-      this.$refs.bar.mergeOptions({
-        xAxis: {
-          data: asyncData.categories
+
+      this.$refs.bar.showLoading();
+       Vue.http.get('static/data/getchartdata.json')
+         .then((response) => {
+            var o =response.data.data
+                  var tempDate = new Date;
+      var ch = "来源:龙渊数据平台 数据更新时间：" + tempDate.getFullYear() + "." + (tempDate.getMonth() + 1) + "." + tempDate.getDate();
+      var options = {
+        title : {
+          show : true,
+          right : 40,
+          bottom : 0,
+          textStyle : {
+            color : "#636677",
+            fontSize : 16
+          },
+          text : ch
         },
-        series: [{
-          name: '销量',
-          data: asyncData.data
+        color : ["#f5895b", "#f9c148", "#86d2df", "#56a4b0", "#278b8d"],
+        tooltip : {
+          trigger : "axis",
+          axisPointer : {
+            type : "shadow"
+          }
+        },
+        legend : {
+          right : 40,
+          top : 30,
+          data: ["初创期", "发展期", "成熟期", "上市", "被收购"]
+        },
+        grid : {
+          left : "3%",
+          right : "4%",
+          bottom : "18%",
+          containLabel : true
+        },
+        yAxis : {
+          type : "value",
+          axisLine : {
+            show : false
+          },
+          axisTick : {
+            show : false
+          },
+          splitLine : {
+            lineStyle : {
+              color : "#e5e9ec"
+            }
+          }
+        },
+        xAxis : {
+          type : "category",
+          axisLine : {
+            lineStyle : {
+              color : "#e5e9ec"
+            }
+          },
+          axisTick : {
+            show : false
+          },
+          splitLine : {
+            show : false
+          },
+          axisLabel : {
+            rotate : -50,
+            interval : 0
+          },
+          data : o.scope
+        },
+        series : [{
+          name : o.series[0].name,
+          type : "bar",
+          barWidth : 30,
+          stack : "总量",
+          data : o.series[0].data
+        }, {
+          name : o.series[1].name,
+          type : "bar",
+          stack : "总量",
+          data : o.series[1].data
+        }, {
+          name : o.series[2].name,
+          type : "bar",
+          stack : "总量",
+          data : o.series[2].data
+        }, {
+          name : o.series[3].name,
+          type : "bar",
+          stack : "总量",
+          data : o.series[3].data
+        }, {
+          name : o.series[4].name,
+          type : "bar",
+          stack : "总量",
+          data : o.series[4].data
         }]
-      })
+      };
+
+      this.$refs.bar.mergeOptions(options)
       this.$refs.bar.hideLoading()
-    }, 3000)
+        })
+       .catch(function(response) {
+        console.log(0)
+       });
+
+    // setTimeout(() => {
+    //   this.$refs.bar.mergeOptions({
+    //     xAxis: {
+    //       data: asyncData.categories
+    //     },
+    //     series: [{
+    //       name: '销量',
+    //       data: asyncData.data
+    //     }]
+    //   })
+    //   this.$refs.bar.hideLoading()
+    // }, 3000)
     
   },
   destroy: function () {

@@ -10,7 +10,8 @@ Vue.use(VueResource);
 import homeLine from './components/homeLine'
 import barLine from './components/barLine'
 
-
+Vue.http.options.emulateJSON = true;
+Vue.http.options.emulateHTTP = true;
 const router = new VueRouter({
     routes: [
     {
