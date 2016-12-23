@@ -22,18 +22,18 @@ export default {
     return {
       bar: {
         title: {
-          text: '异步数据加载示例'
+          text: ''
         },
         tooltip: {},
         legend: {
-          data:['销量']
+          data:['']
         },
         xAxis: {
           data: []
         },
         yAxis: {},
         series: [{
-          name: '销量',
+          name: '',
           type: 'bar',
           data: []
         }]
@@ -49,7 +49,7 @@ export default {
   mounted() {
 
       this.$refs.bar.showLoading();
-       Vue.http.get('static/data/getchartdata.json')
+       Vue.http.get('http://www.lilidong.cn/demo/vue2.0.x+echart3.0.x/static/data/getchartdata.json')
          .then((response) => {
             var o =response.data.data
                   var tempDate = new Date;

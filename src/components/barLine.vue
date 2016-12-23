@@ -23,11 +23,11 @@ export default {
     return {
       bar: {
         title: {
-          text: 'ss'
+          text: ''
         },
         tooltip: {},
         legend: {
-          data:['销量']
+          data:['']
         },
         xAxis: {
           data: []
@@ -46,7 +46,7 @@ export default {
   mounted() {
 
       this.$refs.bar.showLoading();
-       Vue.http.get('static/data/time.json')
+       Vue.http.get('http://www.lilidong.cn/demo/vue2.0.x+echart3.0.x/static/data/time.json')
          .then((response) => {
          console.log(response.data.msg)
           
